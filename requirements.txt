@@ -1,0 +1,8 @@
+django
+pdfminer.six
+textract
+spacy
+docx2txt
+nltk
+# python -m spacy download en_core_web_sm
+PyYAML==5.2

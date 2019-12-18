@@ -94,6 +94,4 @@ migrations
 !**/migrations/__init__.py
 .vscode
 daemon-services/
-Product/static/Product/site-data
-Flash_Deal/static/Flash_Deal/site-data
-slider/static/slider/site-data
+media

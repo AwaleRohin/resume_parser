@@ -1,10 +1,5 @@
-<html>
-    <head>
-        <title>Resume Parser</title>
-        <link rel="stylesheet" type="text/css" href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    </head>
-    <body>
+{% extends 'base.html' %}
+    {% block content %}
         <div class="container pt-4 mt-4">
             <form method="POST"  enctype="multipart/form-data">
             {% csrf_token %}
@@ -14,5 +9,4 @@
             </div>
             </form>
         </div>
-    </body>
-</html>
+    {% endblock %}

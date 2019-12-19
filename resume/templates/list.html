@@ -1,27 +1,35 @@
 {% extends 'base.html' %}
     {% block content %}
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Phone No.</th>
-                    <th scope="col">Skills</th>
-                    <th scope="col">Education</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in data%}
+        <div class = "container">
+            <table class="table table-striped table-bordered">
+                <thead>
                     <tr>
-                        <th scope="row">{{forloop.counter}}</th>
-                        <td>{{i.name}}</td>
-                        <td>{{i.email}}</td>
-                        <td>{{i.mobile}}</td>
-                        <td>{{i.skills}}</td>
-                        <td>{{i.education}}</td>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Phone No.</th>
+                        <th scope="col">Skills</th>
+                        <th scope="col">Education</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for i in data%}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{i.name}}</td>
+                            <td>{{i.email}}</td>
+                            <td>{{i.mobile}}</td>
+                            <td>{{i.skills}}</td>
+                            <td>{{i.education}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="container">
+            <form action={% url 'search' %} method='GET'>
+                <input type='text' name='search'>
+                <button type='submit'>Search</button>
+            </form>
+        </div>
     {% endblock %}

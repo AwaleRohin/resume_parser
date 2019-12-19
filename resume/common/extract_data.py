@@ -12,6 +12,7 @@ from resume import models
 
 nlp = spacy.load('en_core_web_sm')
 
+
 def extract_text(doc_path):
     temp = textract.process(doc_path)
     text = str(temp, 'utf-8')
@@ -21,10 +22,10 @@ def extract_text(doc_path):
     education = extract_education(text)
     skills = extract_skills(text)
     resume_data = models.ResumeData.objects.create(name=name,
-                                                    mobile=phone_number,
-                                                    email=email,
-                                                    education=education,
-                                                    skills=skills)
+                                                   mobile=phone_number,
+                                                   email=email,
+                                                   education=education,
+                                                   skills=skills)
     resume_data.save()
 
 
@@ -37,13 +38,12 @@ def extract_name(resume_text):
     matches = matcher(nlp_text)
     for match_id, start, end in matches:
         span = nlp_text[start:end]
-        return span.text
+        return span.text.capitalize()
 
 
 def extract_mobile_number(text):
     phone = re.findall(re.compile(
-        r'(?:(?:\+?([1-9]|[0-9][0-9]|[0-9][0-9][0-9])\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([0-9][1-9]|[0-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?'), text)
-
+        r'(?:(?:\+?([1-9]|[0-9][0-9]|[0-9][0-9][0-9])\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([0-9][1-9]|[0-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{7})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?'), text)
     if phone:
         number = ''.join(phone[0])
         if len(number) > 10:
@@ -87,10 +87,8 @@ def extract_education(resume_text):
     nltk.download('stopwords')
     nltk_stopwords = nltk.corpus.stopwords.words('english')
 
-    EDUCATION = [
-        'BIM', 'BACHELORS IN INFORMATION MANAGEMENT', 'Bsc.CSIT', 'BBA',
-        'BBS', 'BCA', 'MBA', 'MBS'
-    ]
+    data = pd.read_csv(settings.BASE_DIR + "/education.csv")
+    EDUCATION = list(data.columns.values)
     nlp_text = nlp(resume_text)
     nlp_text = [sent.string.strip() for sent in nlp_text.sents]
     edu = []

@@ -5,7 +5,7 @@ from django.contrib.postgres.fields import ArrayField
 
 class ResumeData(models.Model):
     name = models.CharField(max_length=200, null=False, blank=False)
-    mobile = models.CharField(max_length=10,blank=True)
+    mobile = models.CharField(max_length=15,blank=True)
     email = models.CharField(max_length=150,blank=True)
     skills = ArrayField(models.CharField(max_length=150),blank=True)
     education = models.CharField(max_length=150,blank=True)

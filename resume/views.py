@@ -3,6 +3,7 @@ from django.conf import settings
 from resume import forms
 from resume import models
 from resume.common import extract_data
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 
 
 def upload_resume(request):
@@ -24,4 +25,13 @@ def upload_resume(request):
 
 def lists(request):
     resume_data = models.ResumeData.objects.all()
-    return render(request , 'list.html', {'data':resume_data})
+    return render(request, 'list.html', {'data': resume_data})
+
+
+def filter_resume(request):
+    vector = SearchVector('skills')
+    query = SearchQuery(request.GET['search'].strip())
+    data = models.ResumeData.objects.annotate(
+        rank=SearchRank(vector, query)).order_by('-rank')
+    print(data)
+    return render(request, 'list.html', {'data': data})

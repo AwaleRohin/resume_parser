@@ -4,8 +4,8 @@ textract
 spacy
 docx2txt
 nltk
-# python -m spacy download en_core_web_sm
 PyYAML==5.2
 psycopg2==2.8.4
-fuzzywuzzy===0.17.0
+fuzzywuzzy==0.17.0
 python-Levenshtein
+python-docx==0.8.10

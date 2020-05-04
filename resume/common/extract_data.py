@@ -8,9 +8,15 @@ import nltk
 from resume import forms
 from fuzzywuzzy import process
 from resume import models
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from string import punctuation
+from nltk.collocations import *
 
 
 nlp = spacy.load('en_core_web_sm')
+nltk.download('punkt')
+nltk.download('stopwords')
 
 
 def extract_text(doc_path):
@@ -42,14 +48,14 @@ def extract_name(resume_text):
 
 
 def extract_mobile_number(text):
-    phone = re.findall(re.compile(
-        r'(?:(?:\+?([1-9]|[0-9][0-9]|[0-9][0-9][0-9])\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([0-9][1-9]|[0-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{7})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?'), text)
-    if phone:
-        number = ''.join(phone[0])
-        if len(number) > 10:
-            return '+' + number
-        else:
-            return number
+    pattern = [{"ORTH": "+", "OP": "?"}, {"SHAPE": "ddd", "OP": "?"}, {"ORTH": "-", "OP": "?"}, {"SHAPE": "dddd", "LENGTH": 10}]
+    nlp_text = nlp(text)    
+    matcher = Matcher(nlp.vocab)
+    matcher.add("PHONE_NUMBER", None, pattern)
+    matches = matcher(nlp_text)
+    for match_id, start, end in matches:
+        span = nlp_text[start:end]
+        return span.text
 
 
 def extract_email(email):
@@ -84,7 +90,6 @@ def extract_skills(resume_text):
 
 
 def extract_education(resume_text):
-    nltk.download('stopwords')
     nltk_stopwords = nltk.corpus.stopwords.words('english')
 
     data = pd.read_csv(settings.BASE_DIR + "/education.csv")

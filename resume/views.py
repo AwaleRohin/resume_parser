@@ -9,9 +9,11 @@ from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 def upload_resume(request):
     if request.method == 'POST':
         try:
+            print(request.FILES['resume'])
             form = forms.ResumeUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
+                # document.resume = 
                 url = settings.BASE_DIR + '/resume/media/resumes/' + \
                     request.FILES['resume'].name
                 extract_data.extract_text(url)
@@ -29,9 +31,10 @@ def lists(request):
 
 
 def filter_resume(request):
-    vector = SearchVector('skills')
-    query = SearchQuery(request.GET['search'].strip())
-    data = models.ResumeData.objects.annotate(
-        rank=SearchRank(vector, query)).order_by('-rank')
-    print(data)
+    data  = models.ResumeData.objects.filter(skills__icontains=request.GET['search'].capitalize().strip())
+    # vector = SearchVector('skills')
+    # query = SearchQuery(request.GET['search'].strip())
+    # data = models.ResumeData.objects.annotate(
+    #     rank=SearchRank(vector, query)).order_by('-rank')
+    # print(data)
     return render(request, 'list.html', {'data': data})
